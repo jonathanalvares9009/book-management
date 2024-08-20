@@ -27,6 +27,15 @@ const bookListType = `
   }
 `;
 
+const bookListFilterType = `
+  input BookFilter {
+    title: String
+    authorName: String
+    publishedAfter: String
+    publishedBefore: String
+  }
+`;
+
 const authorType = `
     type Author {
       id: ID!
@@ -41,6 +50,14 @@ const authorListType = `
   type PaginatedAuthors {
     authors: [Author!]!
     pageInfo: PageInfo!
+  }
+`;
+
+const authorListFilterType = `
+  input AuthorFilter {
+    name: String
+    bornAfter: String
+    bornBefore: String
   }
 `;
 
@@ -59,8 +76,10 @@ const type = `
     ${pageInfoType}
     ${bookType}
     ${bookListType}
+    ${bookListFilterType}
     ${authorType}
     ${authorListType}
+    ${authorListFilterType}
     ${reviewType}
 `;
 

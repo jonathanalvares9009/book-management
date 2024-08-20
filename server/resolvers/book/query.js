@@ -1,15 +1,47 @@
+const { Op } = require("sequelize");
 const { Author, Book } = require("../../models");
 const { Metadata } = require("../../models/mongodb");
 
 const BookQuery = {
-  books: async ({ page = 1, limit = 10 }) => {
+  books: async ({ page = 1, limit = 10, filter = {} }) => {
     const offset = (page - 1) * limit;
 
+    let whereClause = {};
+    let authorWhereClause = {};
+
+    if (filter.title) {
+      whereClause.title = { [Op.iLike]: `%${filter.title}%` };
+    }
+
+    if (filter.authorName) {
+      authorWhereClause.name = { [Op.iLike]: `%${filter.authorName}%` };
+    }
+
+    if (filter.publishedAfter) {
+      whereClause.published_date = { [Op.gte]: filter.publishedAfter };
+    }
+
+    if (filter.publishedBefore) {
+      whereClause.published_date = {
+        ...whereClause.published_date,
+        [Op.lte]: filter.publishedBefore,
+      };
+    }
+
     const { count, rows: books } = await Book.findAndCountAll({
-      include: Author,
+      where: whereClause,
+      include: [
+        {
+          model: Author,
+          where: Object.keys(authorWhereClause).length
+            ? authorWhereClause
+            : undefined,
+        },
+      ],
       limit: limit,
       offset: offset,
       order: [["id", "ASC"]],
+      distinct: true, // This ensures correct count when including associations
     });
 
     for (let book of books) {
