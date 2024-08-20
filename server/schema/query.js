@@ -1,10 +1,10 @@
 const bookQuery = `
-    books: [Book]
+    books(page: Int, limit: Int): PaginatedBooks!
     book(id: ID!): Book
 `;
 
 const authorQuery = `
-    authors: [Author]
+    authors(page: Int, limit: Int): PaginatedAuthors!
     author(id: ID!): Author
 `;
 

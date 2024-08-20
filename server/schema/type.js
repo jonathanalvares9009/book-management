@@ -1,3 +1,13 @@
+const pageInfoType = `
+  type PageInfo {
+    currentPage: Int!
+    totalPages: Int!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    totalItems: Int!
+  }
+`;
+
 const bookType = `
     type Book {
       id: ID!
@@ -10,6 +20,13 @@ const bookType = `
     }
 `;
 
+const bookListType = `
+  type PaginatedBooks {
+    books: [Book!]!
+    pageInfo: PageInfo!
+  }
+`;
+
 const authorType = `
     type Author {
       id: ID!
@@ -18,6 +35,13 @@ const authorType = `
       born_date: String
       books: [Book]
     }
+`;
+
+const authorListType = `
+  type PaginatedAuthors {
+    authors: [Author!]!
+    pageInfo: PageInfo!
+  }
 `;
 
 const reviewType = `
@@ -32,8 +56,11 @@ const reviewType = `
 `;
 
 const type = `
+    ${pageInfoType}
     ${bookType}
+    ${bookListType}
     ${authorType}
+    ${authorListType}
     ${reviewType}
 `;
 
