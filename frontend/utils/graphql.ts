@@ -32,3 +32,31 @@ export const GET_BOOKS = gql`
     }
   }
 `;
+
+export const GET_AUTHORS = gql`
+  query GetAuthors(
+    $currentPage: Int!
+    $currentLimit: Int!
+    $nameFilter: String
+    $startDate: String
+    $endDate: String
+  ) {
+    authors(
+      page: $currentPage
+      limit: $currentLimit
+      filter: { name: $nameFilter, bornAfter: $startDate, bornBefore: $endDate }
+    ) {
+      authors {
+        name
+        born_date
+      }
+      pageInfo {
+        currentPage
+        totalPages
+        hasNextPage
+        hasPreviousPage
+        totalItems
+      }
+    }
+  }
+`;
