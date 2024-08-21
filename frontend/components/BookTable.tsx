@@ -132,7 +132,20 @@ const BookTable: React.FC = () => {
     },
   ];
 
-  return <PaginatedTable columns={columns as any} fetchData={fetchData} />;
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: 16,
+        }}
+      >
+        <Button type="primary">Add New</Button>
+      </div>
+      <PaginatedTable columns={columns as any} fetchData={fetchData} />
+    </div>
+  );
 };
 
 export default BookTable;
