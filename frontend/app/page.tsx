@@ -1,6 +1,6 @@
 "use client";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import BookTable from "@/components/BookTable";
+import TableSwitcher from "@/components/TableSwitcher";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -10,7 +10,7 @@ const client = new ApolloClient({
 export default function Home() {
   return (
     <ApolloProvider client={client}>
-      <BookTable />
+      <TableSwitcher />
     </ApolloProvider>
   );
 }
