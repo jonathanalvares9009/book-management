@@ -7,7 +7,7 @@ const BookMutation = {
       title,
       description,
       published_date,
-      author_id,
+      author_id: author_id || null,
     });
     await Metadata.create({ book_id: book.id });
     return book;

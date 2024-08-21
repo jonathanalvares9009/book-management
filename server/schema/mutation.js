@@ -1,5 +1,5 @@
 const bookMutation = `
-    addBook(title: String!, description: String, published_date: String, author_id: ID!): Book
+    addBook(title: String!, description: String, published_date: String, author_id: ID): Book
     updateBook(id: ID!, title: String, description: String, published_date: String, author_id: ID): Book
     deleteBook(id: ID!): Boolean
 `;
