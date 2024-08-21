@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Input, Table, TablePaginationConfig, Button, DatePicker } from "antd";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   FilterValue,
   SorterResult,
@@ -8,41 +8,9 @@ import {
 } from "antd/es/table/interface";
 import moment from "moment";
 import { BooksData, Book } from "@/types/book";
+import { GET_BOOKS } from "@/utils/graphql";
 
 const { RangePicker } = DatePicker;
-
-const GET_BOOKS = gql`
-  query GetBooks(
-    $currentPage: Int!
-    $currentLimit: Int!
-    $titleFilter: String
-    $startDate: String
-    $endDate: String
-  ) {
-    books(
-      page: $currentPage
-      limit: $currentLimit
-      filter: {
-        title: $titleFilter
-        publishedAfter: $startDate
-        publishedBefore: $endDate
-      }
-    ) {
-      books {
-        title
-        published_date
-        average_rating
-      }
-      pageInfo {
-        currentPage
-        totalPages
-        hasNextPage
-        hasPreviousPage
-        totalItems
-      }
-    }
-  }
-`;
 
 const PaginatedTable: React.FC = () => {
   const [titleFilter, setTitleFilter] = useState("");
