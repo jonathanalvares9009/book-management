@@ -4,11 +4,13 @@ import { useQuery } from "@apollo/client";
 import { AuthorsData, Author } from "@/types/author";
 import { GET_AUTHORS } from "@/utils/graphql";
 import PaginatedTable from "./PaginatedTable";
+import AuthorForm from "./AuthorForm";
 
 const { RangePicker } = DatePicker;
 
 const AuthorTable: React.FC = () => {
   const { refetch } = useQuery<AuthorsData>(GET_AUTHORS);
+  const [openForm, setOpenForm] = React.useState(false);
 
   const fetchData = useCallback(
     async ({
@@ -133,9 +135,26 @@ const AuthorTable: React.FC = () => {
           marginBottom: 16,
         }}
       >
-        <Button type="primary">Add New</Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            setOpenForm(true);
+          }}
+        >
+          Add New
+        </Button>
       </div>
       <PaginatedTable columns={columns as any} fetchData={fetchData} />
+      {openForm && (
+        <AuthorForm
+          visible={openForm}
+          setVisible={setOpenForm}
+          onCreate={(values) => {
+            console.log("Author created: ", { values });
+            setOpenForm(false);
+          }}
+        />
+      )}
     </div>
   );
 };
