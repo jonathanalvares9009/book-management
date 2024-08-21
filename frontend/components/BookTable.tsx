@@ -176,7 +176,13 @@ const BookTable: React.FC = () => {
           Add New
         </Button>
       </div>
-      <PaginatedTable columns={columns as any} fetchData={fetchData} />
+      <PaginatedTable
+        columns={columns as any}
+        fetchData={fetchData}
+        onRowSelect={(record) => {
+          console.log(record);
+        }}
+      />
       {openForm && (
         <BookForm
           visible={openForm}

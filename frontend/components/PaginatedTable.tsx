@@ -18,12 +18,14 @@ interface PaginatedTableProps<T> {
     total: number;
   }>;
   initialPageSize?: number;
+  onRowSelect: (record: T) => void;
 }
 
 function PaginatedTable<T extends object>({
   columns,
   fetchData,
   initialPageSize = 10,
+  onRowSelect,
 }: PaginatedTableProps<T>) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -73,6 +75,11 @@ function PaginatedTable<T extends object>({
       columns={columns}
       dataSource={data}
       loading={loading}
+      onRow={(record) => ({
+        onClick: () => {
+          onRowSelect(record);
+        },
+      })}
       onChange={handleTableChange}
       pagination={{
         current: currentPage,

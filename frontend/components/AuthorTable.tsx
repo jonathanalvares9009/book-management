@@ -166,7 +166,13 @@ const AuthorTable: React.FC = () => {
           Add New
         </Button>
       </div>
-      <PaginatedTable columns={columns as any} fetchData={fetchData} />
+      <PaginatedTable
+        columns={columns as any}
+        fetchData={fetchData}
+        onRowSelect={(record) => {
+          console.log("Selected row:", record);
+        }}
+      />
       {openForm && (
         <AuthorForm
           visible={openForm}
