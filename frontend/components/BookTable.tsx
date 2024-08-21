@@ -1,15 +1,18 @@
 import React, { useCallback } from "react";
 import { Input, Button, DatePicker } from "antd";
 import moment from "moment";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { BooksData, Book } from "@/types/book";
-import { GET_BOOKS } from "@/utils/graphql";
+import { ADD_AUTHOR, ADD_BOOK, GET_BOOKS } from "@/utils/graphql";
 import PaginatedTable from "./PaginatedTable";
+import BookForm from "./BookForm";
 
 const { RangePicker } = DatePicker;
 
 const BookTable: React.FC = () => {
   const { refetch } = useQuery<BooksData>(GET_BOOKS);
+  const [openForm, setOpenForm] = React.useState(false);
+  const [addBook, { data, loading, error }] = useMutation(ADD_BOOK);
 
   const fetchData = useCallback(
     async ({
@@ -34,7 +37,7 @@ const BookTable: React.FC = () => {
         total: data.books.pageInfo.totalItems,
       };
     },
-    [refetch]
+    [refetch, data]
   );
 
   const columns = [
@@ -132,6 +135,29 @@ const BookTable: React.FC = () => {
     },
   ];
 
+  const handleSubmit = async ({
+    title,
+    description,
+    published_date,
+  }: {
+    title: string;
+    description: string;
+    published_date: string;
+  }) => {
+    try {
+      await addBook({
+        variables: {
+          title,
+          description: description || "",
+          publishedDate: moment(published_date).format("YYYY-MM-DD"),
+        },
+      });
+      setOpenForm(false);
+    } catch (error) {
+      console.error("Error adding book:", error);
+    }
+  };
+
   return (
     <div>
       <div
@@ -141,9 +167,23 @@ const BookTable: React.FC = () => {
           marginBottom: 16,
         }}
       >
-        <Button type="primary">Add New</Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            setOpenForm(true);
+          }}
+        >
+          Add New
+        </Button>
       </div>
       <PaginatedTable columns={columns as any} fetchData={fetchData} />
+      {openForm && (
+        <BookForm
+          visible={openForm}
+          setVisible={setOpenForm}
+          onCreate={handleSubmit}
+        />
+      )}
     </div>
   );
 };

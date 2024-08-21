@@ -33,6 +33,23 @@ export const GET_BOOKS = gql`
   }
 `;
 
+export const ADD_BOOK = gql`
+  mutation addBook(
+    $title: String!
+    $description: String!
+    $publishedDate: String!
+  ) {
+    addBook(
+      title: $title
+      description: $description
+      published_date: $publishedDate
+    ) {
+      title
+      id
+    }
+  }
+`;
+
 export const GET_AUTHORS = gql`
   query GetAuthors(
     $currentPage: Int!
