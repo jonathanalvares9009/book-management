@@ -7,29 +7,9 @@ import {
   TableCurrentDataSource,
 } from "antd/es/table/interface";
 import moment from "moment";
+import { BooksData, Book } from "@/types/book";
 
 const { RangePicker } = DatePicker;
-
-interface Book {
-  title: string;
-  published_date: string;
-  average_rating: number;
-}
-
-interface PageInfo {
-  currentPage: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  totalItems: number;
-}
-
-interface BooksData {
-  books: {
-    books: Book[];
-    pageInfo: PageInfo;
-  };
-}
 
 const GET_BOOKS = gql`
   query GetBooks(
