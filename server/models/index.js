@@ -13,8 +13,9 @@ const Book = BookModel(sequelize);
 const Author = AuthorModel(sequelize);
 
 // Associations
-Author.hasMany(Book);
-Book.belongsTo(Author);
+// Associations
+Author.hasMany(Book, { foreignKey: "author_id" });
+Book.belongsTo(Author, { foreignKey: "author_id", as: "author" });
 
 module.exports = {
   sequelize,

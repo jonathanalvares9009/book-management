@@ -33,6 +33,7 @@ const BookQuery = {
       include: [
         {
           model: Author,
+          as: "author",
           where: Object.keys(authorWhereClause).length
             ? authorWhereClause
             : undefined,
@@ -66,7 +67,14 @@ const BookQuery = {
     };
   },
   book: async ({ id }) => {
-    const book = await Book.findByPk(id, { include: Author });
+    const book = await Book.findByPk(id, {
+      include: [
+        {
+          model: Author,
+          as: "author", // Ensure this alias matches the one used in your model associations
+        },
+      ],
+    });
     if (!book) {
       throw new Error("Book not found");
     }

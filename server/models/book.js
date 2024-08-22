@@ -10,7 +10,15 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
     },
     published_date: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
+    },
+    author_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Authors",
+        key: "id",
+      },
+      allowNull: true, // Adjust based on whether author_id is required
     },
   });
 };

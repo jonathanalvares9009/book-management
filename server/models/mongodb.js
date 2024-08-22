@@ -23,4 +23,4 @@ const MetadataSchema = new mongoose.Schema({
 const Review = mongoose.model("Review", ReviewSchema);
 const Metadata = mongoose.model("Metadata", MetadataSchema);
 
-module.exports = { Review, Metadata };
+module.exports = { Review, Metadata, mongoose };
