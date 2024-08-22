@@ -18,7 +18,9 @@ export const GET_BOOKS = gql`
       }
     ) {
       books {
+        id
         title
+        description
         published_date
         average_rating
       }
@@ -46,6 +48,24 @@ export const ADD_BOOK = gql`
     ) {
       title
       id
+    }
+  }
+`;
+
+export const UPDATE_BOOK = gql`
+  mutation updateBook(
+    $id: ID!
+    $title: String!
+    $description: String!
+    $publishedDate: String!
+  ) {
+    updateBook(
+      id: $id
+      title: $title
+      description: $description
+      published_date: $publishedDate
+    ) {
+      title
     }
   }
 `;

@@ -1,16 +1,27 @@
-import { Form, Modal, Input, Radio } from "antd";
+import { Book } from "@/types/book";
+import { Form, Modal, Input } from "antd";
 import React, { useState } from "react";
 
 const BookForm = ({
   visible,
   setVisible,
   onCreate,
+  data = null,
 }: {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   onCreate: (values: any) => void;
+  data?: null | Book;
 }) => {
   const [form] = Form.useForm();
+
+  React.useEffect(() => {
+    if (data) {
+      form.setFieldsValue(data);
+    } else {
+      form.resetFields();
+    }
+  }, [data, form]);
 
   const handleCreate = () => {
     form
@@ -27,7 +38,7 @@ const BookForm = ({
   return (
     <Modal
       visible={visible}
-      title="Create a new book"
+      title={data ? "Edit Book" : "Create a new book"}
       okText="Ok"
       onCancel={() => {
         setVisible(false);

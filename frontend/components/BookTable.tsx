@@ -3,7 +3,7 @@ import { Input, Button, DatePicker } from "antd";
 import moment from "moment";
 import { useMutation, useQuery } from "@apollo/client";
 import { BooksData, Book } from "@/types/book";
-import { ADD_AUTHOR, ADD_BOOK, GET_BOOKS } from "@/utils/graphql";
+import { ADD_BOOK, GET_BOOKS, UPDATE_BOOK } from "@/utils/graphql";
 import PaginatedTable from "./PaginatedTable";
 import BookForm from "./BookForm";
 
@@ -12,7 +12,9 @@ const { RangePicker } = DatePicker;
 const BookTable: React.FC = () => {
   const { refetch } = useQuery<BooksData>(GET_BOOKS);
   const [openForm, setOpenForm] = React.useState(false);
-  const [addBook, { data, loading, error }] = useMutation(ADD_BOOK);
+  const [addBook, { data }] = useMutation(ADD_BOOK);
+  const [updateBook, { data: updatedData }] = useMutation(UPDATE_BOOK);
+  const [selectedBook, setSelectedBook] = React.useState<Book | null>(null);
 
   const fetchData = useCallback(
     async ({
@@ -37,7 +39,7 @@ const BookTable: React.FC = () => {
         total: data.books.pageInfo.totalItems,
       };
     },
-    [refetch, data]
+    [refetch, data, updatedData]
   );
 
   const columns = [
@@ -145,13 +147,25 @@ const BookTable: React.FC = () => {
     published_date: string;
   }) => {
     try {
-      await addBook({
-        variables: {
-          title,
-          description: description || "",
-          publishedDate: moment(published_date).format("YYYY-MM-DD"),
-        },
-      });
+      if (selectedBook) {
+        await updateBook({
+          variables: {
+            id: selectedBook.id,
+            title,
+            description: description || "",
+            publishedDate: moment(published_date).format("YYYY-MM-DD"),
+          },
+        });
+      } else {
+        await addBook({
+          variables: {
+            title,
+            description: description || "",
+            publishedDate: moment(published_date).format("YYYY-MM-DD"),
+          },
+        });
+      }
+      setSelectedBook(null);
       setOpenForm(false);
     } catch (error) {
       console.error("Error adding book:", error);
@@ -180,7 +194,8 @@ const BookTable: React.FC = () => {
         columns={columns as any}
         fetchData={fetchData}
         onRowSelect={(record) => {
-          console.log(record);
+          setSelectedBook(record);
+          setOpenForm(true);
         }}
       />
       {openForm && (
@@ -188,6 +203,7 @@ const BookTable: React.FC = () => {
           visible={openForm}
           setVisible={setOpenForm}
           onCreate={handleSubmit}
+          data={selectedBook}
         />
       )}
     </div>
