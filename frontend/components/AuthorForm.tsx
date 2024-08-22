@@ -1,3 +1,4 @@
+import { Author } from "@/types/author";
 import { Form, Modal, Input, Radio } from "antd";
 import React, { useState } from "react";
 
@@ -5,12 +6,22 @@ const AuthorForm = ({
   visible,
   setVisible,
   onCreate,
+  data = null,
 }: {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   onCreate: (values: any) => void;
+  data?: null | Author;
 }) => {
   const [form] = Form.useForm();
+
+  React.useEffect(() => {
+    if (data) {
+      form.setFieldsValue(data);
+    } else {
+      form.resetFields();
+    }
+  }, [data, form]);
 
   const handleCreate = () => {
     form
@@ -27,7 +38,7 @@ const AuthorForm = ({
   return (
     <Modal
       visible={visible}
-      title="Create a new author"
+      title={data ? "Edit Author" : "Create a new author"}
       okText="Ok"
       onCancel={() => {
         setVisible(false);

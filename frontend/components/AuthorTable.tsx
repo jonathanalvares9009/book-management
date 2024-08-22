@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Input, Button, DatePicker } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { AuthorsData, Author } from "@/types/author";
-import { ADD_AUTHOR, GET_AUTHORS } from "@/utils/graphql";
+import { ADD_AUTHOR, GET_AUTHORS, UPDATE_AUTHOR } from "@/utils/graphql";
 import PaginatedTable from "./PaginatedTable";
 import AuthorForm from "./AuthorForm";
 import moment from "moment";
@@ -11,8 +11,12 @@ const { RangePicker } = DatePicker;
 
 const AuthorTable: React.FC = () => {
   const { refetch } = useQuery<AuthorsData>(GET_AUTHORS);
-  const [addAuthor, { data, loading, error }] = useMutation(ADD_AUTHOR);
+  const [addAuthor, { data }] = useMutation(ADD_AUTHOR);
+  const [updateAuthor, { data: updatedData }] = useMutation(UPDATE_AUTHOR);
   const [openForm, setOpenForm] = React.useState(false);
+  const [selectedAuthor, setSelectedAuthor] = React.useState<Author | null>(
+    null
+  );
 
   const fetchData = useCallback(
     async ({
@@ -37,7 +41,7 @@ const AuthorTable: React.FC = () => {
         total: data?.authors?.pageInfo?.totalItems || 0,
       };
     },
-    [refetch, data]
+    [refetch, data, updatedData]
   );
 
   const columns = [
@@ -137,15 +141,26 @@ const AuthorTable: React.FC = () => {
     biography: string;
     born_date: string;
   }) => {
-    console.log(name, biography, born_date);
-    await addAuthor({
-      variables: {
-        name,
-        biography: biography || "",
-        bornDate: moment(born_date).format("YYYY-MM-DD"),
-      },
-    });
+    if (selectedAuthor) {
+      await updateAuthor({
+        variables: {
+          id: selectedAuthor.id,
+          name,
+          biography: biography || "",
+          bornDate: moment(born_date).format("YYYY-MM-DD"),
+        },
+      });
+    } else {
+      await addAuthor({
+        variables: {
+          name,
+          biography: biography || "",
+          bornDate: moment(born_date).format("YYYY-MM-DD"),
+        },
+      });
+    }
     setOpenForm(false);
+    setSelectedAuthor(null);
   };
 
   return (
@@ -170,7 +185,8 @@ const AuthorTable: React.FC = () => {
         columns={columns as any}
         fetchData={fetchData}
         onRowSelect={(record) => {
-          console.log("Selected row:", record);
+          setSelectedAuthor(record);
+          setOpenForm(true);
         }}
       />
       {openForm && (
@@ -178,6 +194,7 @@ const AuthorTable: React.FC = () => {
           visible={openForm}
           setVisible={setOpenForm}
           onCreate={handleSubmit}
+          data={selectedAuthor}
         />
       )}
     </div>
