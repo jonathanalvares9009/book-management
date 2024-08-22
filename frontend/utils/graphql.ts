@@ -43,14 +43,19 @@ export const ADD_BOOK = gql`
     $title: String!
     $description: String!
     $publishedDate: String!
+    $authorId: ID
   ) {
     addBook(
       title: $title
       description: $description
       published_date: $publishedDate
+      author_id: $authorId
     ) {
       title
-      id
+      author {
+        id
+        name
+      }
     }
   }
 `;
@@ -61,14 +66,19 @@ export const UPDATE_BOOK = gql`
     $title: String!
     $description: String!
     $publishedDate: String!
+    $authorId: ID
   ) {
     updateBook(
       id: $id
       title: $title
       description: $description
       published_date: $publishedDate
+      author_id: $authorId
     ) {
       title
+      author {
+        id
+      }
     }
   }
 `;

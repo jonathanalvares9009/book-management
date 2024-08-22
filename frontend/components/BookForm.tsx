@@ -3,6 +3,7 @@ import { Book } from "@/types/book";
 import { GET_AUTHORS } from "@/utils/graphql";
 import { useQuery } from "@apollo/client";
 import { Form, Modal, Input, Select, Spin } from "antd";
+import moment from "moment";
 import React, { useState } from "react";
 
 const { Option } = Select;
@@ -29,7 +30,13 @@ const BookForm = ({
 
   React.useEffect(() => {
     if (data) {
-      form.setFieldsValue({ ...data, author_id: data?.author?.id || "" });
+      form.setFieldsValue({
+        ...data,
+        published_date: moment(parseInt(data.published_date)).format(
+          "YYYY-MM-DD"
+        ),
+        author_id: data?.author?.id || "",
+      });
     } else {
       form.resetFields();
     }

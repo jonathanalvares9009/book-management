@@ -34,6 +34,14 @@ const BookTable: React.FC = () => {
         endDate: filters.published_date?.[0]?.[1]?.format("YYYY-MM-DD"),
       });
 
+      // Change the format of the published_date to display in the table
+      data.books.books = data.books.books.map((book: Book) => ({
+        ...book,
+        published_date: moment(parseInt(book.published_date)).format(
+          "DD/MM/YYYY"
+        ),
+      }));
+
       return {
         data: data.books.books,
         total: data.books.pageInfo.totalItems,
@@ -141,28 +149,39 @@ const BookTable: React.FC = () => {
     title,
     description,
     published_date,
+    author_id,
   }: {
     title: string;
     description: string;
     published_date: string;
+    author_id?: string;
   }) => {
     try {
       if (selectedBook) {
+        const variables: any = {
+          id: selectedBook.id,
+          title: title,
+          description: description,
+          publishedDate: published_date,
+        };
+
+        if (author_id) {
+          variables.authorId = author_id;
+        }
         await updateBook({
-          variables: {
-            id: selectedBook.id,
-            title,
-            description: description || "",
-            publishedDate: moment(published_date).format("YYYY-MM-DD"),
-          },
+          variables,
         });
       } else {
+        const variables: any = {
+          title,
+          description: description || "",
+          publishedDate: moment(published_date).format("YYYY-MM-DD"),
+        };
+        if (author_id) {
+          variables.authorId = author_id;
+        }
         await addBook({
-          variables: {
-            title,
-            description: description || "",
-            publishedDate: moment(published_date).format("YYYY-MM-DD"),
-          },
+          variables,
         });
       }
       setSelectedBook(null);
