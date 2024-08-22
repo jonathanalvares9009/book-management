@@ -7,11 +7,13 @@ const AuthorForm = ({
   setVisible,
   onCreate,
   data = null,
+  setDataToNull,
 }: {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   onCreate: (values: any) => void;
   data?: null | Author;
+  setDataToNull: () => void;
 }) => {
   const [form] = Form.useForm();
 
@@ -41,6 +43,7 @@ const AuthorForm = ({
       title={data ? "Edit Author" : "Create a new author"}
       okText="Ok"
       onCancel={() => {
+        setDataToNull();
         setVisible(false);
       }}
       onOk={handleCreate}

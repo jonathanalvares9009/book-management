@@ -206,6 +206,7 @@ const BookTable: React.FC = () => {
           setVisible={setOpenForm}
           onCreate={handleSubmit}
           data={selectedBook}
+          setDataToNull={() => setSelectedBook(null)}
         />
       )}
     </div>

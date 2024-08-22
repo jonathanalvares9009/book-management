@@ -1,23 +1,35 @@
+import { AuthorsData } from "@/types/author";
 import { Book } from "@/types/book";
-import { Form, Modal, Input } from "antd";
+import { GET_AUTHORS } from "@/utils/graphql";
+import { useQuery } from "@apollo/client";
+import { Form, Modal, Input, Select, Spin } from "antd";
 import React, { useState } from "react";
+
+const { Option } = Select;
 
 const BookForm = ({
   visible,
   setVisible,
   onCreate,
   data = null,
+  setDataToNull,
 }: {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   onCreate: (values: any) => void;
+  setDataToNull: () => void;
   data?: null | Book;
 }) => {
   const [form] = Form.useForm();
+  const {
+    data: authorsData,
+    loading: authorsLoading,
+    error: authorsError,
+  } = useQuery<AuthorsData>(GET_AUTHORS);
 
   React.useEffect(() => {
     if (data) {
-      form.setFieldsValue(data);
+      form.setFieldsValue({ ...data, author_id: data?.author?.id || "" });
     } else {
       form.resetFields();
     }
@@ -41,6 +53,7 @@ const BookForm = ({
       title={data ? "Edit Book" : "Create a new book"}
       okText="Ok"
       onCancel={() => {
+        setDataToNull();
         setVisible(false);
       }}
       onOk={handleCreate}
@@ -59,7 +72,7 @@ const BookForm = ({
           <Input />
         </Form.Item>
         <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+          <Input.TextArea />
         </Form.Item>
 
         <Form.Item
@@ -73,6 +86,24 @@ const BookForm = ({
           ]}
         >
           <Input type="date" />
+        </Form.Item>
+
+        <Form.Item name="author_id" label="Author">
+          {authorsLoading ? (
+            <Spin />
+          ) : authorsError ? (
+            <div>Error loading authors: {authorsError.message}</div>
+          ) : authorsData && authorsData.authors ? (
+            <Select>
+              {authorsData.authors?.authors?.map((author) => (
+                <Option key={author.id} value={author.id}>
+                  {author.name}
+                </Option>
+              ))}
+            </Select>
+          ) : (
+            <div>No authors available</div>
+          )}
         </Form.Item>
       </Form>
     </Modal>

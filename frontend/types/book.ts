@@ -5,6 +5,9 @@ export interface Book {
   title: string;
   published_date: string;
   average_rating: number;
+  author: {
+    id: string;
+  };
 }
 
 export interface BooksData {

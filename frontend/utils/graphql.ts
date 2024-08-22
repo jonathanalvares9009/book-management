@@ -23,6 +23,9 @@ export const GET_BOOKS = gql`
         description
         published_date
         average_rating
+        author {
+          id
+        }
       }
       pageInfo {
         currentPage
@@ -72,8 +75,8 @@ export const UPDATE_BOOK = gql`
 
 export const GET_AUTHORS = gql`
   query GetAuthors(
-    $currentPage: Int!
-    $currentLimit: Int!
+    $currentPage: Int
+    $currentLimit: Int
     $nameFilter: String
     $startDate: String
     $endDate: String

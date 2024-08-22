@@ -195,6 +195,7 @@ const AuthorTable: React.FC = () => {
           setVisible={setOpenForm}
           onCreate={handleSubmit}
           data={selectedAuthor}
+          setDataToNull={() => setSelectedAuthor(null)}
         />
       )}
     </div>
