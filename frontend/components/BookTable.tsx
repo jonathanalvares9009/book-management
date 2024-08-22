@@ -169,6 +169,8 @@ const BookTable: React.FC = () => {
       setOpenForm(false);
     } catch (error) {
       console.error("Error adding book:", error);
+      setOpenForm(false);
+      setSelectedBook(null);
     }
   };
 

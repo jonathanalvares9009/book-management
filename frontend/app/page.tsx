@@ -5,7 +5,7 @@ import TableSwitcher from "@/components/TableSwitcher";
 const { BACKEND_URL } = process.env;
 
 const client = new ApolloClient({
-  uri: `${BACKEND_URL}/graphql`,
+  uri: `http://localhost:4000/graphql`,
   cache: new InMemoryCache(),
 });
 
