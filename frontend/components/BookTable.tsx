@@ -32,10 +32,10 @@ const BookTable: React.FC = () => {
         currentLimit,
         startDate: filters.published_date?.[0]?.[0]?.format("YYYY-MM-DD"),
         endDate: filters.published_date?.[0]?.[1]?.format("YYYY-MM-DD"),
+        authorFilter: filters.author?.[0] || "",
       });
 
-      // Change the format of the published_date to display in the table
-      data.books.books = data.books.books.map((book: Book) => ({
+      const formattedBooks = data.books.books.map((book: Book) => ({
         ...book,
         published_date: moment(parseInt(book.published_date)).format(
           "DD/MM/YYYY"
@@ -43,13 +43,12 @@ const BookTable: React.FC = () => {
       }));
 
       return {
-        data: data.books.books,
+        data: formattedBooks,
         total: data.books.pageInfo.totalItems,
       };
     },
     [refetch, data, updatedData]
   );
-
   const columns = [
     {
       title: "Title",
@@ -139,9 +138,47 @@ const BookTable: React.FC = () => {
       ),
     },
     {
-      title: "Rating",
-      dataIndex: "average_rating",
-      sorter: (a: Book, b: Book) => a.average_rating - b.average_rating,
+      title: "Author",
+      dataIndex: "author",
+      render: (author: any) => author?.name || "-",
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: {
+        setSelectedKeys: (selectedKeys: string[]) => void;
+        selectedKeys: string[];
+        confirm: () => void;
+        clearFilters: () => void;
+      }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="Search author"
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => confirm()}
+            style={{ width: 188, marginBottom: 8, display: "block" }}
+          />
+          <Button
+            type="primary"
+            onClick={() => confirm()}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters()}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </div>
+      ),
     },
   ];
 

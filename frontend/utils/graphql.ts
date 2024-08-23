@@ -7,6 +7,7 @@ export const GET_BOOKS = gql`
     $titleFilter: String
     $startDate: String
     $endDate: String
+    $authorFilter: String
   ) {
     books(
       page: $currentPage
@@ -15,6 +16,7 @@ export const GET_BOOKS = gql`
         title: $titleFilter
         publishedAfter: $startDate
         publishedBefore: $endDate
+        authorName: $authorFilter
       }
     ) {
       books {
@@ -25,6 +27,7 @@ export const GET_BOOKS = gql`
         average_rating
         author {
           id
+          name
         }
       }
       pageInfo {
