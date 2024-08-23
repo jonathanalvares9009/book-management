@@ -27,11 +27,11 @@ const BookMutation = {
       );
 
       // Create the metadata using Mongoose
-      // await Metadata.create({
-      //   book_id: book.id,
-      //   average_rating: 0,
-      //   review_count: 0,
-      // });
+      await Metadata.create({
+        book_id: book.id,
+        average_rating: 0,
+        review_count: 0,
+      });
 
       const bookWithAuthor = await Book.findByPk(book.id, {
         include: {
