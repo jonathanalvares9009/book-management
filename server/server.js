@@ -9,7 +9,7 @@ const startServer = require("./utils/connection");
 require("dotenv").config();
 
 const app = express();
-const PORT = 4000;
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 
